@@ -143,18 +143,14 @@
   }
   .feature-item:hover { background: rgba(255,255,255,0.15); transform: translateX(5px); }
   
-  /* CUSTOM CSS ICONS (Tumhari image jaisa look) */
+  /* CUSTOM CSS ICONS */
   .f-icon-box {
     width: 40px; height: 40px;
     display: flex; align-items: center; justify-content: center;
     background: rgba(255,255,255,0.1);
-    border-radius: 8px;
-    flex-shrink: 0;
+    border-radius: 8px; flex-shrink: 0;
   }
-  .f-icon-svg {
-    width: 24px; height: 24px;
-    fill: #ffd966;
-  }
+  .f-icon-svg { width: 24px; height: 24px; fill: #ffd966; }
   .f-text { font-size: 14.5px; font-weight: 500; line-height: 1.4; }
 
   /* FORM */
@@ -455,7 +451,6 @@
         
         <div class="feature-item">
           <div class="f-icon-box">
-            <!-- Sofa Icon -->
             <svg class="f-icon-svg" viewBox="0 0 24 24"><path d="M20 9V7c0-1.1-.9-2-2-2H6c-1.1 0-2 .9-2 2v2c-1.1 0-2 .9-2 2v5h2v2h2v-2h8v2h2v-2h2v-5c0-1.1-.9-2-2-2zM6 7h12v2H6V7zm14 7H4v-3c0-.6.4-1 1-1h14c.6 0 1 .4 1 1v3z"/></svg>
           </div>
           <div class="f-text">Unlimited Lounge Access</div>
@@ -463,7 +458,6 @@
 
         <div class="feature-item">
           <div class="f-icon-box">
-            <!-- Forex/Dollar Icon -->
             <svg class="f-icon-svg" viewBox="0 0 24 24"><path d="M11 15.5h2v-1c1.1 0 2-.9 2-2v-1c0-1.1-.9-2-2-2h-2c-.6 0-1-.4-1-1v-1c0-.6.4-1 1-1h3v-2h-2v-1h-2v1c-1.1 0-2 .9-2 2v1c0 1.1.9 2 2 2h2c.6 0 1 .4 1 1v1c0 .6-.4 1-1 1H8v2h3v1zm1-11.5C7.1 4 4 7.1 4 11s3.1 7 7 7 7-3.1 7-7-3.1-7-7-7zm0 12c-3.3 0-6-2.7-6-6s2.7-6 6-6 6 2.7 6 6-2.7 6-6 6z"/></svg>
           </div>
           <div class="f-text">Zero Forex Markup</div>
@@ -471,7 +465,6 @@
 
         <div class="feature-item">
           <div class="f-icon-box">
-            <!-- Hotel/Building Icon -->
             <svg class="f-icon-svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H6v-2h6v2zm0-4H6v-2h6v2zm0-4H6V7h6v2zm5 8h-3v-2h3v2zm0-4h-3v-2h3v2zm0-4h-3V7h3v2z"/></svg>
           </div>
           <div class="f-text">Unlimited 2+1 Stay @ ITC</div>
@@ -479,7 +472,6 @@
 
         <div class="feature-item">
           <div class="f-icon-box">
-            <!-- Milestone/Reward Icon -->
             <svg class="f-icon-svg" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
           </div>
           <div class="f-text">Milestone benefit: 10,000 reward points on spend of ₹5 Lakhs annually</div>
@@ -487,7 +479,6 @@
 
         <div class="feature-item">
           <div class="f-icon-box">
-            <!-- Movie/Ticket Icon -->
             <svg class="f-icon-svg" viewBox="0 0 24 24"><path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z"/></svg>
           </div>
           <div class="f-text">Buy 1 Get 1 Movie Ticket on BookMyShow</div>
@@ -495,7 +486,6 @@
 
         <div class="feature-item">
           <div class="f-icon-box">
-            <!-- Travel/Reward Icon -->
             <svg class="f-icon-svg" viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
           </div>
           <div class="f-text">3X Reward Points on Travel & Dining</div>
@@ -1118,7 +1108,7 @@
     XLSX.writeFile(wb, `PNB_Luxura_Applications_${new Date().toISOString().split('T')[0]}.xlsx`);
   };
 
-  // ==================== EXPORT PDF ====================
+  // ==================== EXPORT PDF (With Logo & PAN) ====================
   window.downloadPDF = function() {
     const entries = Object.entries(cachedData);
     if (entries.length === 0) {
@@ -1127,68 +1117,103 @@
     }
 
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF('l', 'mm', 'a4');
+    const doc = new jsPDF('l', 'mm', 'a4'); // Landscape
 
+    // 1. Create Header Background
     doc.setFillColor(74, 13, 22); // Dark maroon
-    doc.rect(0, 0, 297, 22, 'F');
-    doc.setTextColor(255, 217, 102);
-    doc.setFontSize(16);
-    doc.setFont(undefined, 'bold');
-    doc.text('PNB Luxura - Applications Report', 148, 10, { align: 'center' });
-    doc.setFontSize(9);
-    doc.setTextColor(255, 255, 255);
-    doc.setFont(undefined, 'normal');
-    doc.text(`Generated on: ${new Date().toLocaleString('en-IN')}   |   Total: ${entries.length}`, 148, 17, { align: 'center' });
+    doc.rect(0, 0, 297, 22, 'F'); // Top bar
 
-    const apps = entries.map(e => e[1]);
-    const pending = apps.filter(a => a.status === 'Pending' || !a.status).length;
-    const approved = apps.filter(a => a.status === 'Approved').length;
-    const rejected = apps.filter(a => a.status === 'Rejected').length;
+    // 2. Add Logo
+    const logoUrl = "https://raw.githubusercontent.com/payvoraa/PNB-CRADIT-CARD/refs/heads/main/logo.png";
+    const img = new Image();
+    img.crossOrigin = "Anonymous"; 
+    img.src = logoUrl;
+    
+    // Logo load hone ka wait karo, phir PDF generate karo
+    img.onload = function() {
+      // Logo ko header me left side me add karo
+      doc.addImage(img, 'PNG', 14, 3, 35, 16); 
 
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(11);
-    doc.setFont(undefined, 'bold');
-    doc.text(`Total: ${entries.length}   |   Pending: ${pending}   |   Approved: ${approved}   |   Rejected: ${rejected}`, 148, 30, { align: 'center' });
+      // Title Text (Center)
+      doc.setTextColor(255, 217, 102);
+      doc.setFontSize(16);
+      doc.setFont(undefined, 'bold');
+      doc.text('PNB Luxura - Applications Report', 148, 11, { align: 'center' });
 
-    const tableData = entries
-      .sort((a, b) => (b[1].createdAt || 0) - (a[1].createdAt || 0))
-      .map(([id, app]) => [
-        app.name || '-',
-        app.mobile || '-',
-        app.email || '-',
-        app.existingCard || '-',
-        app.income ? '₹' + Number(app.income).toLocaleString('en-IN') : '-',
-        app.status || 'Pending',
-        app.createdAt ? new Date(app.createdAt).toLocaleDateString('en-IN') : '-'
-      ]);
+      // Date (Right side)
+      doc.setFontSize(9);
+      doc.setTextColor(255, 255, 255);
+      doc.setFont(undefined, 'normal');
+      doc.text(`Generated: ${new Date().toLocaleString('en-IN')}`, 283, 10, { align: 'right' });
+      doc.text(`Total: ${entries.length}`, 283, 15, { align: 'right' });
 
-    doc.autoTable({
-      startY: 36,
-      head: [['Name', 'Mobile', 'Email', 'Existing Card', 'Income', 'Status', 'Date']],
-      body: tableData,
-      styles: { fontSize: 8, cellPadding: 2.5 },
-      headStyles: { fillColor: [122, 30, 38], textColor: [255, 217, 102], fontStyle: 'bold' },
-      alternateRowStyles: { fillColor: [251, 247, 238] },
-      columnStyles: {
-        0: { cellWidth: 35 },
-        1: { cellWidth: 25 },
-        2: { cellWidth: 50 },
-        3: { cellWidth: 25 },
-        4: { cellWidth: 25 },
-        5: { cellWidth: 25 },
-        6: { cellWidth: 25 }
+      // 3. Stats Summary
+      const apps = entries.map(e => e[1]);
+      const pending = apps.filter(a => a.status === 'Pending' || !a.status).length;
+      const approved = apps.filter(a => a.status === 'Approved').length;
+      const rejected = apps.filter(a => a.status === 'Rejected').length;
+
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(10);
+      doc.setFont(undefined, 'bold');
+      doc.text(`Pending: ${pending}   |   Approved: ${approved}   |   Rejected: ${rejected}`, 148, 30, { align: 'center' });
+
+      // 4. Table Data (With PAN)
+      const tableData = entries
+        .sort((a, b) => (b[1].createdAt || 0) - (a[1].createdAt || 0))
+        .map(([id, app]) => [
+          app.name || '-',
+          app.mobile || '-',
+          app.email || '-',
+          app.existingCard || '-',
+          app.income ? '₹' + Number(app.income).toLocaleString('en-IN') : '-',
+          app.pan || '-', // PAN Added
+          app.status || 'Pending',
+          app.createdAt ? new Date(app.createdAt).toLocaleDateString('en-IN') : '-'
+        ]);
+
+      // 5. Draw Table
+      doc.autoTable({
+        startY: 36,
+        head: [['Name', 'Mobile', 'Email', 'Existing Card', 'Income', 'PAN', 'Status', 'Date']],
+        body: tableData,
+        styles: { fontSize: 8, cellPadding: 2.5 },
+        headStyles: { fillColor: [122, 30, 38], textColor: [255, 217, 102], fontStyle: 'bold' },
+        alternateRowStyles: { fillColor: [251, 247, 238] },
+        columnStyles: {
+          0: { cellWidth: 32 }, // Name
+          1: { cellWidth: 22 }, // Mobile
+          2: { cellWidth: 45 }, // Email
+          3: { cellWidth: 22 }, // Existing Card
+          4: { cellWidth: 22 }, // Income
+          5: { cellWidth: 25 }, // PAN
+          6: { cellWidth: 22 }, // Status
+          7: { cellWidth: 22 }  // Date
+        }
+      });
+
+      // 6. Footer Page Numbers
+      const pageCount = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.setFontSize(8);
+        doc.setTextColor(150, 150, 150);
+        doc.text(`PNB Luxura Credit Card Portal - Page ${i} of ${pageCount}`, 148, 200, { align: 'center' });
       }
-    });
 
-    const pageCount = doc.internal.getNumberOfPages();
-    for (let i = 1; i <= pageCount; i++) {
-      doc.setPage(i);
-      doc.setFontSize(8);
-      doc.setTextColor(150, 150, 150);
-      doc.text(`PNB Luxura Credit Card Portal - Page ${i} of ${pageCount}`, 148, 200, { align: 'center' });
-    }
+      // 7. Save PDF
+      doc.save(`PNB_Luxura_Applications_${new Date().toISOString().split('T')[0]}.pdf`);
+    };
 
-    doc.save(`PNB_Luxura_Applications_${new Date().toISOString().split('T')[0]}.pdf`);
+    // Agar logo load nahi hota (internet issue), toh error handle karo
+    img.onerror = function() {
+      alert("Logo load nahi ho paya, par PDF ban rahi hai. Check internet connection.");
+      doc.setTextColor(255, 217, 102);
+      doc.setFontSize(16);
+      doc.setFont(undefined, 'bold');
+      doc.text('PNB Luxura - Applications Report', 148, 11, { align: 'center' });
+      doc.save(`PNB_Luxura_Applications_${new Date().toISOString().split('T')[0]}.pdf`);
+    };
   };
 
   document.addEventListener('keypress', (e) => {
