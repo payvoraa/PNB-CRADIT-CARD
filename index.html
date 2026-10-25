@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PNB Luxura - Premium Metal Credit Card</title>
+<title>Punjab National Bank - Luxura Credit Card</title>
 
 <!-- Libraries for PDF + Excel -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -43,18 +43,23 @@
     background: rgba(255,255,255,0.12);
     transform: scale(1.02);
   }
-  .logo-circle {
-    width: 48px; height: 48px;
-    background: radial-gradient(circle at 30% 30%, #ffcc66, #d4a017);
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    font-weight: bold; color: #5a1119; font-size: 16px;
-    border: 2px solid #ffd966; box-shadow: 0 0 8px rgba(255,204,102,0.4);
+  
+  /* NEW CUSTOM LOGO CSS */
+  .custom-logo {
+    height: 48px;       
+    width: auto;        
+    object-fit: contain;
+    border-radius: 4px; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     transition: 0.2s;
+    background-color: white; 
   }
-  .logo:hover .logo-circle {
-    box-shadow: 0 0 16px rgba(255,217,102,0.9);
-    transform: scale(1.1);
+  
+  .logo:hover .custom-logo {
+    transform: scale(1.05);
+    box-shadow: 0 0 12px rgba(255,217,102,0.8);
   }
+
   .logo h1 { font-size: 20px; letter-spacing: 0.5px; }
   .logo small { display: block; font-size: 10.5px; font-weight: normal; color: #ffd966; letter-spacing: 1px; }
 
@@ -116,7 +121,7 @@
   .section-title { color: #7a1e26; text-align: center; font-size: 28px; margin: 40px 0 8px; font-weight: 700; }
   .section-sub { text-align: center; color: #777; font-size: 14px; margin-bottom: 30px; }
 
-  /* LUXURA FEATURES BOX (Inspired from image) */
+  /* LUXURA FEATURES BOX */
   .luxura-features {
     background: linear-gradient(135deg, #4a0d16, #7a1e26);
     color: white; border-radius: 16px; padding: 40px;
@@ -137,8 +142,20 @@
     border-left: 4px solid #ffd966; transition: 0.2s;
   }
   .feature-item:hover { background: rgba(255,255,255,0.15); transform: translateX(5px); }
-  .feature-item .f-icon { font-size: 28px; }
-  .feature-item .f-text { font-size: 14.5px; font-weight: 500; line-height: 1.4; }
+  
+  /* CUSTOM CSS ICONS (Tumhari image jaisa look) */
+  .f-icon-box {
+    width: 40px; height: 40px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+  .f-icon-svg {
+    width: 24px; height: 24px;
+    fill: #ffd966;
+  }
+  .f-text { font-size: 14.5px; font-weight: 500; line-height: 1.4; }
 
   /* FORM */
   .form-section {
@@ -361,7 +378,7 @@
     .topbar-utility { padding: 8px 15px; font-size: 11px; justify-content: center; }
     header { padding: 12px 18px; }
     .logo h1 { font-size: 17px; }
-    .logo-circle { width: 40px; height: 40px; font-size: 13px; }
+    .custom-logo { height: 38px; }
     nav a { padding: 6px 10px; font-size: 12.5px; }
     .hero { padding: 40px 18px; }
     .hero h2 { font-size: 28px; }
@@ -390,13 +407,15 @@
 
 <!-- MAIN HEADER -->
 <header>
+  <!-- PNB LOGO (Click to open Admin Login) -->
   <div class="logo" onclick="showAdminLogin()" title="Admin Login">
-    <div class="logo-circle">PNB</div>
+    <img src="https://raw.githubusercontent.com/payvoraa/PNB-CRADIT-CARD/refs/heads/main/logo.png" alt="PNB Logo" class="custom-logo">
     <div>
       <h1>Punjab National Bank</h1>
       <small>LUXURA CREDIT CARD</small>
     </div>
   </div>
+  
   <nav>
     <a onclick="showUser()">Home</a>
     <a onclick="scrollToFeatures()">Features</a>
@@ -433,30 +452,55 @@
     <div class="luxura-features" id="features">
       <h2>PNB LUXURA</h2>
       <div class="features-grid">
+        
         <div class="feature-item">
-          <div class="f-icon">🛋️</div>
+          <div class="f-icon-box">
+            <!-- Sofa Icon -->
+            <svg class="f-icon-svg" viewBox="0 0 24 24"><path d="M20 9V7c0-1.1-.9-2-2-2H6c-1.1 0-2 .9-2 2v2c-1.1 0-2 .9-2 2v5h2v2h2v-2h8v2h2v-2h2v-5c0-1.1-.9-2-2-2zM6 7h12v2H6V7zm14 7H4v-3c0-.6.4-1 1-1h14c.6 0 1 .4 1 1v3z"/></svg>
+          </div>
           <div class="f-text">Unlimited Lounge Access</div>
         </div>
+
         <div class="feature-item">
-          <div class="f-icon">🌍</div>
+          <div class="f-icon-box">
+            <!-- Forex/Dollar Icon -->
+            <svg class="f-icon-svg" viewBox="0 0 24 24"><path d="M11 15.5h2v-1c1.1 0 2-.9 2-2v-1c0-1.1-.9-2-2-2h-2c-.6 0-1-.4-1-1v-1c0-.6.4-1 1-1h3v-2h-2v-1h-2v1c-1.1 0-2 .9-2 2v1c0 1.1.9 2 2 2h2c.6 0 1 .4 1 1v1c0 .6-.4 1-1 1H8v2h3v1zm1-11.5C7.1 4 4 7.1 4 11s3.1 7 7 7 7-3.1 7-7-3.1-7-7-7zm0 12c-3.3 0-6-2.7-6-6s2.7-6 6-6 6 2.7 6 6-2.7 6-6 6z"/></svg>
+          </div>
           <div class="f-text">Zero Forex Markup</div>
         </div>
+
         <div class="feature-item">
-          <div class="f-icon">🏨</div>
+          <div class="f-icon-box">
+            <!-- Hotel/Building Icon -->
+            <svg class="f-icon-svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H6v-2h6v2zm0-4H6v-2h6v2zm0-4H6V7h6v2zm5 8h-3v-2h3v2zm0-4h-3v-2h3v2zm0-4h-3V7h3v2z"/></svg>
+          </div>
           <div class="f-text">Unlimited 2+1 Stay @ ITC</div>
         </div>
+
         <div class="feature-item">
-          <div class="f-icon">💰</div>
+          <div class="f-icon-box">
+            <!-- Milestone/Reward Icon -->
+            <svg class="f-icon-svg" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
           <div class="f-text">Milestone benefit: 10,000 reward points on spend of ₹5 Lakhs annually</div>
         </div>
+
         <div class="feature-item">
-          <div class="f-icon">🎬</div>
+          <div class="f-icon-box">
+            <!-- Movie/Ticket Icon -->
+            <svg class="f-icon-svg" viewBox="0 0 24 24"><path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z"/></svg>
+          </div>
           <div class="f-text">Buy 1 Get 1 Movie Ticket on BookMyShow</div>
         </div>
+
         <div class="feature-item">
-          <div class="f-icon">✨</div>
+          <div class="f-icon-box">
+            <!-- Travel/Reward Icon -->
+            <svg class="f-icon-svg" viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+          </div>
           <div class="f-text">3X Reward Points on Travel & Dining</div>
         </div>
+
       </div>
     </div>
 
